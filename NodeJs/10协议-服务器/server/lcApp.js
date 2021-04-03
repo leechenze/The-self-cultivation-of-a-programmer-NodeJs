@@ -1,7 +1,17 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-07 19:34:33
+ * @LastEditTime: 2021-04-03 16:44:47
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /The-self-cultivation-of-a-programmer/WEBFrontEnd/NodeJS/Basics/10协议-服务器/server/lcApp.js
+ */
+
 let http = require('http');
 let path = require('path');
 let url = require('url');
 let fs = require('fs');
+
 
 class LcApp {
     constructor() {
@@ -10,12 +20,14 @@ class LcApp {
         // 声明静态目录的含义是为了可以在index.js中操作
         // new LcApp().staticDir = 'asd' 实现目录更改;
         this.staticDir = '/static';
-        
+
         this.server.on('request', (request, response) => {
             let pathObj = path.parse(request.url);
-            console.log(pathObj);
             if (pathObj.dir in this.reqEvent) {
-                request.pathObj = pathObj;
+                // 设置响应的内容类型, 解决中文乱码;
+                response.setHeader("Content-Type", "text/html; charset=utf-8");
+                response.pathObj = pathObj;
+                response.render = render;
                 this.reqEvent[pathObj.dir](request, response);
                 // 判断静态目录的访问;
             } else if (pathObj.dir == this.staticDir) {
@@ -53,6 +65,36 @@ class LcApp {
         }
     }
 }
+
+
+/**
+ * @description: 自行封装的render渲染方法;
+ * @param {Object} options
+ * @param {String} templatePath
+ * @return {void}
+ */
+function render(options, templatePath) {
+    fs.readFile(templatePath, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
+        if (err) {
+            throw new Error(err);
+        } else {
+            let reg = /\{\{(.*?)\}\}/igs,
+                result;
+            // result = reg.exec(data)操作赋值后返回的是reg.exec(data)的结果;
+            // exec函数如果没有匹配完成会一直返回匹配结果, 如果完成后没有匹配结果返回null;
+            // reg.exec('{{title}} abc sdf sdfs {{name}}')
+            // 不理解用while循环的原因 可以将以上正则的exec函数匹配结果在控制台执行多次查看结果;
+            while (result = reg.exec(data)) {
+                let strKey = result[1].trim();
+                let strVal = options[strKey];
+                data = data.replace(result[0], strVal);
+            }
+            // 这里使用箭头函数, 所以当前的this指向的就是response
+            this.end(data);
+        }
+    })
+}
+
 
 
 module.exports = LcApp;

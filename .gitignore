@@ -3,3 +3,14 @@
 
 # Ada Library Information
 *.ali
+
+WEBFrontEnd/Webpack/node_modules
+.history
+.vscode
+books
+deploy.sh
+.DS_Store
+node_modules
+music
+images
+image
