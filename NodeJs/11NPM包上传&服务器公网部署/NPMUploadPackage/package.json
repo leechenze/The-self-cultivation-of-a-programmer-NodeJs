@@ -1,0 +1,11 @@
+{
+  "name": "leetestfn",
+  "version": "0.1.1",
+  "description": "测试NPM包上传",
+  "main": "leecsFn.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "leecs",
+  "license": "ISC"
+}

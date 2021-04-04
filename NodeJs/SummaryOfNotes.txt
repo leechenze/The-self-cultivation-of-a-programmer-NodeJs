@@ -824,4 +824,60 @@
             }
         4.在非循环正则匹配中, 通过eval函数,将字符串表达式计算出来;
             let strVal = eval('options.' + strKey);
+    
+
+
+
+拾壹.NPM包上传&公网服务器部署;
+    NPM包上传: 上传 leetestfn 包
+        详见: NPMUploadPackage(本包源码)
+             UsePublishedLeecsFn(包应用)
+    
+        1.创建文件夹 & NPM包初始化  (NPMUploadPackage);
+            npm init
+        2.npm包信息设置;
+            {
+                "name": "leetestfn",
+                "version": "0.1.0",
+                "description": "测试NPM包上传",
+                "main": "leecsFn.js",
+                "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1"
+                },
+                "author": "leecs",
+                "license": "ISC"
+            }
+        3.NPM管网账号注册(此操作如果已有可忽略)
+        4.NPM管网账号邮箱验证(此操作如果已有可忽略)
+        5.本机登陆NPM
+            npm login
+        6.发布包
+            npm publish
+        7.使用包    (usePublishedLeecsFn)
+            发布成功之后进行安装 cnpm install leetestfn(包名), 即可在项目中使用
+            cnpm install leetestfn 注意这里的包名是之前 npm init 后写入的
+            package.json文件中的 name 信息
+    
+
+    公网服务器部署
+        IPv4私有地址
+            24位区块	10.0.0.0 – 10.255.255.255	16,777,216
+            20位区块	172.16.0.0 – 172.31.255.255	1,048,576
+            16位区块	192.168.0.0 – 192.168.255.255	65,536
+
+        花生壳: 用于将私有地址开放到公网, 可以将私网服务器地址和端口号跟公网固定的IP地址和端口进行绑定;
+        账号在官网自行注册, 花生壳在官网自行下载 注册完成后需实名认证;
+        
+        下载地址: https://hsk.oray.com/download/
+        
+        关于配置:
+            应用名称: 名称
+            应用图标: 根据应用场景选择
+            映射类型/应用类型: HTTP
+            映射模版: 不使用模版
+            外网域名: 下拉自动选择
+            外网端口: 默认80
+            内网主机: 本机私网IP地址
+            内网端口: 默认80
+            保存
         

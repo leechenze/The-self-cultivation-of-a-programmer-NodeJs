@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-07-11 21:43:26
+ * @LastEditTime: 2021-04-04 16:55:04
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /The-self-cultivation-of-a-programmer-NodeJs/NodeJs/09Puppeteer/rwFN.js
+ */
 let fs = require('fs');
 
 // 封装文件读取;
@@ -12,7 +20,7 @@ function fsRead(path){
                 console.log('读取内容成功');
             }
         })
-    })    
+    })
 }
 
 
