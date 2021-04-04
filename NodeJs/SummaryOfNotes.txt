@@ -799,4 +799,29 @@
             /movies/0
             /movies/1
 
-            
+    
+    动态生成列表
+        1.定义列表循环标记:
+            {%for {list}%}
+            <li>{{item.name}}</li>
+            <li>{{item.gender}}</li>
+            {%endfor%}
+        2.正则匹配标记
+            let reg = /\{\%for \{(.*?)\}\%\}(.*?)\{\%endfor\%\}/igs,
+            匹配两组:
+                1.第一组匹配变量的key值;
+                2.第二组匹配每项内容;
+        3.匹配替换每一项内容;
+            while (result = reg.exec(data)) {
+                let strKey = result[1].trim();
+                // 通过Key值获取数组内容;
+                let strVal = options[strKey],
+                    listStr = "";
+                strVal.forEach((item, ind) => {
+                    listStr = listStr + replaceVal(result[2], { "item": item });
+                })
+                data = data.replace(result[0], listStr);
+            }
+        4.在非循环正则匹配中, 通过eval函数,将字符串表达式计算出来;
+            let strVal = eval('options.' + strKey);
+        
