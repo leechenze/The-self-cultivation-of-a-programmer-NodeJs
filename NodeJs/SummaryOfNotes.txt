@@ -881,3 +881,22 @@
             内网端口: 默认80
             保存
         
+
+
+拾贰.数据库
+    
+    下载地址: https://dev.mysql.com/downloads/mysql/
+
+    问题记录: Mac安装mysql问题之-bash: mysql: command not found
+    解决方案: https://www.jianshu.com/p/ba2216596569
+    
+    navicat premium 客户端可视化数据库操作;
+
+    NodeJs连接数据库
+        cnpm install mysql
+
+        连接数据库:
+            在 index.js 中根据实际配置修改数据库用户名,密码及数据库名;
+
+        sobooks 网站数据爬取存入数据库 详见 spider.js
+        
