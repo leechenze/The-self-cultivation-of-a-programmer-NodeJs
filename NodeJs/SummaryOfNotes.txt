@@ -899,9 +899,13 @@
             在 index.js 中根据实际配置修改数据库用户名,密码及数据库名;
 
         sobooks 网站数据爬取存入数据库 详见 spider.js
-        
+    
+
     SQL: -- 为SQL中的注释
-        
+
+        SQL关键字大全:
+            https://blog.csdn.net/qq_32038679/article/details/80551580?ops_request_misc=&request_id=&biz_id=102&utm_term=sql关键字&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-80551580.pc_search_result_hbase_insert
+
         比较运算符:
             等于 =
             SELECT * FROM BOOK WHERE score = 6;
@@ -915,16 +919,24 @@
             SELECT * FROM BOOK WHERE score <= 6;
             不等于 != 或 <>
             SELECT * FROM BOOK WHERE score != 6;
-            SELECT * FROM BOOK WHERE score <6>;
+            SELECT * FROM BOOK WHERE score <> 6;
 
+        逻辑运算符:
+            AND
+                -- 查询评分为 5 - 7 之间的数据
+                -- SELECT * FROM BOOK WHERE score > 5 AND score < 7;
+                -- SELECT * FROM book WHERE SCORE BETWEEN 5 AND 7;
+            OR
+                -- 查询作者为 邱华栋 或 柏杨 的数据
+                -- SELECT * FROM book WHERE author = '邱华栋' OR author = '柏杨';
+                -- SELECT * FROM book WHERE author IN ('邱华栋','柏杨');
+            NOT
+                -- 查询评分不等于 0 的数据
+                -- SELECT * FROM book WHERE NOT SCORE = 0;
+                -- 查询评分不等于 0,1,2,3,4,5,6,7,8 的数据
+                -- SELECT * FROM book WHERE SCORE NOT IN (0,1,2,3,4,5,6,7,8);
+                -- 查询评分不等于 7 并且 作者等于 '郭德纲' 的数据
+                -- SELECT * FROM book WHERE NOT SCORE = 7 AND author = '郭德纲';
 
-        WHERE: 
-            -- 查询评分为 6 的数据
-            -- SELECT * FROM BOOK WHERE score = 6;
-        AND: 
-            -- 查询评分为 5 - 7 之间的数据
-            -- SELECT * FROM BOOK WHERE score > 5 AND score < 7;
-        BETWEEN: 
-            -- 查询评分为 3 - 6 之间的数据
-            -- SELECT * FROM book WHERE SCORE BETWEEN 3 AND 6;
-
+        模糊查询:
+            
