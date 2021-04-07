@@ -939,4 +939,30 @@
                 -- SELECT * FROM book WHERE NOT SCORE = 7 AND author = '郭德纲';
 
         模糊查询:
+            LIKE
+                %表示多个任意字符
+                    -- 查询书名与 中 字相关的数据
+                    -- SELECT * FROM book WHERE bookname LIKE '%中%';
+
+                _表示一个任意字符
+                    -- 查询书名中 中 字前面三个字, 后面三个字的数据;
+                    -- SELECT * FROM book WHERE bookname LIKE '___中___';
+        
+        范围查询
+            IN
+                -- 查询作者为 邱华栋 或 柏杨 的数据
+                -- SELECT * FROM book WHERE author IN ('邱华栋','柏杨');
+            BETWEEN AND
+                -- 查询评分为 5 - 7 之间的数据
+                -- SELECT * FROM book WHERE SCORE BETWEEN 5 AND 7;
+        空判断
+            IS NULL
+                -- 查询书作者为 空 的数据;
+                -- SELECT * FROM book WHERE author IS NULL;
+                -- 查询书作者不为 空 的数据;
+                -- SELECT * FROM book WHERE author IS NOT NULL;
+
+        SQL GUI操作(navicat premium):
+            选中表 ==> 右键 ==> 转储SQL文件 ==> 将SQL文件保存至本地;
+            选中库 ==> 右键 ==> 运行SQL文件 ==> 运行成功后选中表 ==> 刷新;
             
