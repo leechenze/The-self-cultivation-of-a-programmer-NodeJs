@@ -983,4 +983,29 @@
             表: teacher_student
         teacher_student表是关联于student和teacher表的, 表现的是多对多的关联关系;
 
+    外键:
+        外键可以理解为对数据库的一种约束
+        比如还是如下三张表, 表内容具体可见 SQL/normal_form.sql
+            表: student
+            表: teacher
+            表: teacher_student
         
+        student表中有两个学生 id 分别为 1,2;
+        teacher表中有两个老师 id 分别为 1,2;
+        teacher_student这张关联表中关联的是 studentId和teacherId;
+        如上的两个表的id只有都只有1,2, 如果在这个关联表中新建studentId或teacherId为3时
+        这时期望是并不应该新增id为3的表记录, 这是就需要用外键来进行约束;
+        如果在外键中约束这个字段的Id后, 再新建前面表中没有对应的Id时,将会报错,
+        就将不能随便插入一条表记录了; 这就是外键的作用(约束/参考关联表的作用);
+        外键约束越多, 查找时性能越慢, 如果考虑性能,不建议使用外键;
+        
+        外键级连操作
+            restrict:   默认值, 抛异常
+            cascade:    如果主表的记录删除, 则表中相关联的记录都被删除 (一般不做)
+            set null:   将外键置空
+            no action:  什么都不做 (一般不做)
+
+        如果是多对多的关系,至少需要建立三张表; 一对多时,需要建立两张表;
+
+        一对多或多对多的关系时做查询就要连表查询(连接查询);
+
