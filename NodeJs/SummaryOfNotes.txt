@@ -887,6 +887,7 @@
     
     下载地址: https://dev.mysql.com/downloads/mysql/
 
+    命令行启用mysql查询: mysql -u root -p
     问题记录: Mac安装mysql问题之-bash: mysql: command not found
     解决方案: https://www.jianshu.com/p/ba2216596569
     
@@ -1001,11 +1002,98 @@
         
         外键级连操作
             restrict:   默认值, 抛异常
-            cascade:    如果主表的记录删除, 则表中相关联的记录都被删除 (一般不做)
+            cascade:    如果主表的记录删除, 则表中相关联的记录都被删除 (一般不用)
             set null:   将外键置空
-            no action:  什么都不做 (一般不做)
+            no action:  什么都不做 (一般不用)
 
-        如果是多对多的关系,至少需要建立三张表; 一对多时,需要建立两张表;
+        如果是多对多的关系,至少需要建立三张表; 一对多时,需要建立至少两张表;
 
         一对多或多对多的关系时做查询就要连表查询(连接查询);
+
+    连表查询:
+        一对多查询: 关键字(INNER JOIN/LEFT JOIN/RIGHT JOIN);
+        一对多涉及到的表: SQL/normal_form
+            表: books
+            表: author
+
+            -- 查询 author表的id 对应 books表的authorId 的匹配结果; 如果无匹配项则不显示
+            -- SELECT * from author INNER JOIN books
+            -- ON author.id = books.authorId;
+
+            -- 查询 author表的id 对应 books表的authorId 的匹配结果; 以author表为准查询, 如果没有匹配项, author表仍会被查询到,所有匹配不上的数据将为null;
+            -- SELECT * from author LEFT JOIN books
+            -- ON author.id = books.authorId;
+
+            -- 查询 author表的id 对应 books表的authorId 的匹配结果; 以books表为准查询, 如果没有匹配项, books表仍会被查询到,所有匹配不上的数据将为null;
+            -- SELECT * from author RIGHT JOIN books
+            -- ON author.id = books.authorId;
+
+            -- 表名重命名 AS
+            -- SELECT * from author AS a RIGHT JOIN books AS b
+            -- ON a.id = b.authorId;
+        
+        多对多查询: 
+        多对多涉及到的表: SQL/normal_form
+            表: student
+            表: score
+            表: course
+
+            -- 查询所有学生的英语成绩
+            -- SELECT * FROM score
+            -- INNER JOIN student ON student.id = score.studentId   -- 这里查出的就是一张表,在此处继续 INNER JOIN 下一张表
+            -- INNER JOIN course ON course.id = score.courseId
+            -- WHERE course.course = '英语';
+
+            -- 查询所有学生的英语成绩(过滤冗余的表名)
+            SELECT score.id,student.studentname,course.course,score.score FROM score
+            INNER JOIN student ON student.id = score.studentId  -- 这里查出的就是一张表,在此处继续 INNER JOIN 下一张表
+            INNER JOIN course ON course.id = score.courseId
+            WHERE course.course = '英语';
+
+
+        自关联查询: 通过标记 id 和 pid 来查询自己表中的数据;
+        自关联查询涉及到的表: SQL/normal_form
+            表: region
+            
+            -- 找出广东省里的所有市 
+            -- r1.name AS '省份' 表头将会重命名: 查询结果的表的表头原来是name, 将会变成省份
+            -- 表头重命名和表名重命名不能同一概念理解;
+            SELECT r1.bianma,r1.name AS '省份',r2.name AS '市区' FROM region AS r1 
+            INNER JOIN region AS r2
+            ON r1.region_id = r2.parent_id
+            WHERE r1.name = '广东省'
+
+        子查询: 查询中又有一个查询(子查询使用()括号);
+        子查询涉及到的表: SQL/normal_form
+            表: student
+            表: score
+            表: course
+            
+            -- 查询年龄大于70的学生的名字
+            -- SELECT studentname from student WHERE student.studentage > 70;
+
+            -- 查询年龄大于70的学生的成绩(当子查询只有一个结果时可以用 = 匹配,也可以用 IN 匹配)
+            -- SELECT * FROM score
+            -- INNER JOIN student ON student.id = score.studentId
+            -- WHERE student.studentname = (SELECT studentname from student WHERE student.studentage > 70);
+
+
+            -- 查询年龄大于70的学生的成绩(当子查询有多个结果时用 IN 匹配, 不管子查询结果是一个或是多个都推荐用 IN 查询)
+            -- SELECT * FROM score
+            -- INNER JOIN student ON student.id = score.studentId
+            -- WHERE student.studentname IN (SELECT studentname from student WHERE student.studentage > 60);
+
+            -- 查询学生年龄大于70岁的老师
+            -- SELECT * FROM teacher
+            -- WHERE EXISTS 
+            -- (
+            -- SELECT * FROM student 
+            -- WHERE student.studentage > 70
+            -- );
+        
+
+            
+            
+
+            
 
