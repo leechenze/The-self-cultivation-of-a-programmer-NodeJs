@@ -1090,10 +1090,75 @@
             -- SELECT * FROM student 
             -- WHERE student.studentage > 70
             -- );
-        
+    视图:
+        视图可以理解为 对于一段sql的封装,一段查询结果为一张表,可以创建为一个视图,这个视图就是一张表;
+        视图封装涉及到的表: SQL/normal_form
+            表: student
+            表: score
+            表: course
+
+            -- 查询所有学生的英语成绩,并创建为一个视图;
+            -- CREATE VIEW view_query AS
+            -- SELECT score.id,student.studentname,course.course,score.score FROM score
+            -- INNER JOIN student ON student.id = score.studentId
+            -- INNER JOIN course ON course.id = score.courseId
+            -- WHERE course.course = '英语';
+            -- 再根据以上视图找出成绩大于90的学生;
+            -- SELECT * FROM view_query WHERE score > 90;
+
+        如下: 如果不使用视图时,也可以把原来的视图部分的查询做为子查询()包含来实现,将很冗余
+
+            -- 查询所有学生的英语成绩大于90的学生;
+            SELECT * FROM 
+            (
+            -- 查询所有学生的英语成绩
+            SELECT score.id,student.studentname,course.course,score.score FROM score
+            INNER JOIN student ON student.id = score.studentId
+            INNER JOIN course ON course.id = score.courseId
+            WHERE course.course = '英语'
+            ) AS view_query
+            WHERE score > 90;
+
+    更新&删除&插入:
+        视图封装涉及到的表: SQL/normal_form
+            表: student
+
+            -- 更新多个字段
+            -- UPDATE student SET studentage = 65,studentname = 'obama1' WHERE id = '2';
+            
+            -- 逻辑删除 一般删除字段使用这种逻辑删除
+            UPDATE student SET isDelete = 'true',studentname = NULL  WHERE id = 2;
+
+            -- 物理删除 物理删除第四条;
+            DELETE FROM student WHERE id = 4;
+
+            -- 插入一条数据;
+            INSERT INTO student (id,studentname,studentage,isDelete) VALUES (4,'washington',999,'false');
+
+    事务:
+        当一个业务逻辑需要多个sql完成时,如果其中一条sql出错,则整个操作都被退回;
+        使用事务可以完成退回功能,保证业务逻辑的正确性;
+        事务四大特性:
+            原子性: 事务中的全部操作在数据库中是不可分割的,要么全部完成,要么均不执行;
+            一致性: 几个并行执行的事务,其执行结果必须按照某一顺序进行操作;
+            隔离性: 事务的执行不受其他事务的干扰,事务执行的中间结果对其他事务必须是透明的;
+            持久性: 对于任意已提交的事务,系统必须保证改事务对数据库的改变不能丢失,即使数据库出错;
+        要求: 表的类型必须是innodb或bdb类型, 才可以对此表使用事务;
+        事务语句:
+            开始: begin;
+            提交: commit;
+            回滚: rollback(使之前的sql不执行不生效);
+            
+            -- 开始SQL语句;
+            BEGIN;
+            INSERT INTO student (id,studentname,studentage,isDelete) VALUES (8,'jackie chan',65,false);
+            -- 回滚,之前的操作都不执行;
+            ROLLBACK;
+            -- 提交数据,之前的操作才会执行;
+            COMMIT;
 
             
             
-
             
-
+            
+            
