@@ -20,4 +20,36 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
     
     VsCode 安装 NodeJs Snippets;
 
-贰.
+    安装 supervisor Node热更新工具;
+    cnpm install supervisor -g
+    安装完成后使用 supervisor代替node运行命令;
+
+贰.CommonJs-SysModules-CustomModules
+
+    系统模块: http, url, fs等NodeJs原生自带的模块;
+    自定义模块: axios等后来通过cnpm安装的模块;
+    
+    自定义模块引入时会默认在一个叫做 node_modules的目录下查找;
+    所以当引入node_modules目录下的模块时可以直接引入模块名称即可找到;
+    引入时只需到目录名即可,默认读取目录名下的index.js文件;
+    这个 node_modules 目录使得自定义模块的引入路径也可以像系统模块简介;
+    比如:
+        const baiduSearch = require('./node_modules/tools/index');
+        路径可以简写为
+        const baiduSearch = require('tools');
+
+    暴露模块: exports 或 module.exports;
+    引入模块: require('路径');
+
+    在 node_modules 目录下的每一个模块下默认读取的都是index.js文件;
+    如果我们不想让默认读取index.js, 而是想自定义此模块默认的读取文件时;
+    在当前模块执行 npm init --yes 或 npm init -y
+    --yes/-y 表示强制生成,等同于 npm init 时每一步执行yes
+    此时模块下会多出package.json文件 (node的配置文件)
+    文件中修改 mian (入口文件) 也就是默认读取的文件即可;
+
+    注意 npm init 的执行环境,是在模块下而不是项目下;
+    详见 node_modules/custom
+    
+    
+叁.
