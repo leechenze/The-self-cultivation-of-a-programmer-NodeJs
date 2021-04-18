@@ -52,4 +52,27 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
     详见 node_modules/custom
     
     
-叁.
+叁.Package-NPM-ThirdModules
+    完全符合CommonJs规范的包目录一般包含如下这些文件:
+        package.js 包描述文件;
+        bin: 用于存放可执行二进制文件的目录;
+        lib: 用于存放JavaScript代码的目录;
+        doc: 用于存放文档的目录;
+
+    通过 NPM 下载第三方包;
+    NPM 地址: https://www.npmjs.com
+    
+    NPM 常用命令:
+        -v                  查看版本
+        install             安装模块
+        uninstall           卸载模块
+        list                查看当前目录下已安装的node包;
+        info xxx            查看xxx版本;
+        init                生成包信息文件(package);
+        install xxx@1.0     指定下载xxx版本为1.0
+        ^1.0.1              第一位版本号不变,后两位取最新
+        ~1.0.1              前两位版本号不变,最后一位取最新
+        *1.0.1              全部取最新值
+
+    dependencies:       通常安装包(正式环境依赖项)
+    devDependencies:    通常安装工具(开发环境依赖项)
