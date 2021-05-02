@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-18 18:19:13
- * @LastEditTime: 2021-04-18 18:53:38
+ * @LastEditTime: 2021-05-02 17:24:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /The-self-cultivation-of-a-programmer-NodeJs/NodeJs/Basic/FS/app.js
@@ -18,6 +18,8 @@ fs.readdir          读取目录
 fs.rename           重命名目录或文件,移动文件
 fs.rmdir            删除目录
 fs.unlink           删除文件
+fs.createReadStream     从文件流中读取数据
+fs.createWriteStream    从文件流中写入文件
 */
 
 let fs = require('fs');
