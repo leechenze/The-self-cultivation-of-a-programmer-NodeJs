@@ -101,3 +101,9 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
 
 
 陆.ExpressPackage
+
+柒.DataBase
+    NoSql (No Only Sql), 意即“不仅仅是Sql”, 指非关系型数据库;
+    和传统的关系型数据库不一样, 是以Key-value形式存储的;
+    MongoDB是一个介于关系型数据库和非关系型数据库之间的产品;
+    
