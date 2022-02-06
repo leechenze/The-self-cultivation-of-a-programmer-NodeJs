@@ -95,6 +95,7 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
         fs.createReadStream     从文件流中读取数据
         fs.createWriteStream    从文件流中写入文件
         
+    
 
 
 伍.StaticWebServer
