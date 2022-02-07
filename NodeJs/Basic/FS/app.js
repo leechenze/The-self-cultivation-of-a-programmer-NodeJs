@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-18 18:19:13
- * @LastEditTime: 2022-02-06 15:32:09
+ * @LastEditTime: 2022-02-06 20:18:35
  * @LastEditors: LeeChenZe
  * @Description: In User Settings Edit
  * @FilePath: /The-self-cultivation-of-a-programmer-NodeJs/NodeJs/Basic/FS/app.js
@@ -119,6 +119,31 @@ fs.rmdir("./deletedir", (err) => {
 /**
  * @description: 判断服务器上有没有upload目录, 如果没有就创建该目录, 如果有的话不做操作;
  */
+let path = "./upload";
+fs.stat(path, (err, data) => {
+  if (err) {
+    // 执行创建目录;
+    mkdir(path);
+  }
+  if (!data.isDirectory()) {
+    // 首先删除文件,再执行创建目录;
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.log("请检查传入的数据是否正常");
+        return;
+      }
+      mkdir(path);
+    });
+  }
+});
+const mkdir = (dir) => {
+  fs.mkdir(dir, (err, data) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
+};
 
 /**
  * @description: 在wwwroot文件夹下有 images js css 以及index.html文件, 将wwwroot文件夹中所有目录列为一个数组;
