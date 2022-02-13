@@ -118,3 +118,44 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
     和传统的关系型数据库不一样, 是以Key-value形式存储的;
     MongoDB是一个介于关系型数据库和非关系型数据库之间的产品;
     
+    mongo                                                                          启动mongodb数据库;
+
+    一.基础增删改查
+      show dbs                                                                       查看所有数据库;
+      user panda                                                                     创建Panda数据库(同时也是切换操作, 此时show dbs是查不到panda库的, 因为库里没数据);
+      show collections                                                               查看数据库中所有的表;
+      db.createCollection('person')                                                  创建person表;
+      db.person.insert({'username': 'leechenze'})                                    创建person表(就是在表中存入一条数据);
+      db.person.find()                                                               查看person表中的数据;
+      db.person.find({'age':'20'})                                                   查看person表中age为20的数据
+      db.person.find({'age':{$gt:22}})                                               查看person表中age大于22的数据
+      db.person.find({'age':{$lt:22}})                                               查看person表中age小于22的数据
+      db.person.find({'age':{$gte:22}})                                              查看person表中age大于等于22的数据
+      db.person.find({'age':{$lte:22}})                                              查看person表中age小于等于22的数据
+      db.person.find({'age':{$lt:22,$gt:10}})                                        查看person表中age小于22并且大于10的数据;
+      db.person.find({'name':/zhang/})                                               查看person表中name包含zhang字段的数据;
+      db.person.find({'name':/^zhang/})                                              查看person表中name以zhang字段开头的数据;
+      db.person.find({'name':/zhang$/})                                              查看person表中name以zhang字段结尾的数据;
+      db.person.find({'age':20},{name:1})                                            查看person表中age为20的数据,只列出数据的name值;
+      db.person.find({$or: [{name: 'lisi', name:'wangwu'}]})                         查找person表中name等于lisi或者wangwu的数据;
+      db.person.find().sort({age:1})                                                 person表根据age进行排序(1为升序);
+      db.person.find().sort({age:-1})                                                person表根据age进行排序(-1为降序); 
+      db.person.find().limit(5)                                                      查询person表中前五条数据;
+      db.person.find().skip(5)                                                       查询person表中后五条数据;
+      db.person.find().count()                                                       查询person表中有多少条数据;
+      db.person.findOne()                                                            查询person表中第一条数据;
+      db.person.update({'name':'lisi123'},{$set: {name: 'lisi'}})                    更改person表中name为lisi123的数据为lisi;
+      db.person.update({'name':'lisi123'},{$set: {name: 'lisi'}},{multi:true})       multi:true 表示如果有多条lisi123的数据, 都会改为lisi;
+      db.dropDatabase()                                                              删除数据库;
+      db.person.drop()                                                               删除表;
+      db.person.remove({'name': 'list'})                                             删除person表中name为lisi的数据;
+      db.person.remove({'age': {$gt: 20})                                            删除person表中age大于20的数据;
+      db.person.remove({'age': {$gt: 20},{justOne:true})                             justOne:true 表示如果有多条age大于20的数据, 只会删除一条(也就是第21条);
+      
+      for(var i = 1; i <= 100; i++){                                                 在person表创建100条数据;
+        db.person.insert({'username':'zhangsan' + i,'age': i});         
+      }
+      db.person.find().skip(30).limit(10);                                           查询第三十条之后的十条数据(分页操作);
+
+    二.优化,索引,分析查询速度
+      
