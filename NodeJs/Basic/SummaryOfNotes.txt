@@ -141,12 +141,13 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
       db.person.find().sort({age:1})                                                 person表根据age进行排序(1为升序);
       db.person.find().sort({age:-1})                                                person表根据age进行排序(-1为降序); 
       db.person.find().limit(5)                                                      查询person表中前五条数据;
-      db.person.find().skip(5)                                                       查询person表中后五条数据;
+      db.person.find().skip(5)                                                       查询person表中第五条之后的数据;
       db.person.find().count()                                                       查询person表中有多少条数据;
       db.person.findOne()                                                            查询person表中第一条数据;
-      db.person.update({'name':'lisi123'},{$set: {name: 'lisi'}})                    更改person表中name为lisi123的数据为lisi;
+      db.person.find().sort({_id:-1}).limit(1)                                       查询person表中最后一条数据;
+      db.person.update({'name':'lisi123'},{$set: {name: 'lisi'}})                    更改person表中name为lisi123的数据为lisi ($set 条件不加的话将替换数据); 
       db.person.update({'name':'lisi123'},{$set: {name: 'lisi'}},{multi:true})       multi:true 表示如果有多条lisi123的数据, 都会改为lisi;
-      db.dropDatabase()                                                              删除数据库;
+      db.dropDatabase()                                                              删除数据库; 
       db.person.drop()                                                               删除表;
       db.person.remove({'name': 'list'})                                             删除person表中name为lisi的数据;
       db.person.remove({'age': {$gt: 20})                                            删除person表中age大于20的数据;
@@ -158,4 +159,34 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
       db.person.find().skip(30).limit(10);                                           查询第三十条之后的十条数据(分页操作);
 
     二.优化,索引,分析查询速度
+      索引是对数据库表中一列或者多列的值进行排序的一种结构,可以使查询数据变得更快;
+      MongoDB中的索引几乎和传统的关系型数据库的索引一摸一样;
+      总结索引的作用就是: 优化查询时间,减少查询时间;      
       
+      db.person.find().explain("executionStats")                                      查询执行信息;
+        输出: explain.executionStats.executionTimeMillis                               查看查询执行时间;
+      db.person.ensureIndex({username: 1})                                            创建索引 (注意username是要设置索引的字段名, 以字段名为索引, 1是升序, -1是倒序)
+      db.person.createIndex({username: 1})                                            创建索引 createIndex 是mongo5.0 之后的写法, 去掉了 ensureIndex 的支持;
+      db.person.createIndex({username: 1},{name:personIndex})                         createIndex的第二个参数是指定name,unique等其他参数的, name一般不用, 因为name有默认值, 而默认值就是username;
+      db.person.createIndex({username: 1},{unique:true})                              唯一索引, 下面详解;
+      db.person.getIndexes()                                                          获取表索引;
+      db.person.dropIndex({username: 1})                                              删除表索引;
+      
+      复合索引:
+        复合索引就是创建两个或多个索引, 在关联查询的情况下使用;
+        db.person.createIndex({username: 1,age:1})
+        以上面的语句为例,如果按着username和age索引进行查询时候会命中索引;
+        按着username索引进行查询时也会命中索引;
+        但如果按着age索引进行查询时则不会命中;
+      唯一索引:
+        如果给一个字段设置唯一索引以后,那这个字段值将不能重复;
+        db.person.createIndex({username: 1},{unique:true});
+        如果在给一个字段设置唯一索引时, 这个字段的值和其他数据的相同字段值重复时,将会报错; 报错信息如下:
+        "E11000 duplicate key error collection: panda.person index: username_1 dup key: { username: \"zhangsan2\" }"
+        如果给一个字段设置唯一索引后, 再次添加一条相同字段名和字段值时,也会报错; 报错信息如下:
+        "An existing index has the same name as the requested index. When index names are not specified, they are auto generated and can cause conflicts."
+
+      
+        
+        
+        
