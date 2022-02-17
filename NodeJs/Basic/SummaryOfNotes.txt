@@ -117,6 +117,11 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
     NoSql (No Only Sql), 意即“不仅仅是Sql”, 指非关系型数据库;
     和传统的关系型数据库不一样, 是以Key-value形式存储的;
     MongoDB是一个介于关系型数据库和非关系型数据库之间的产品;
+
+    下载地址: https://www.mongodb.com/try/download/community
+    我的放置目录为: /usr/local/mongodb
+    
+    
     
     mongo                                                                          启动mongodb数据库;
 
@@ -199,7 +204,7 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
           security:
             authorization:enabled
       3.重启数据库
-        空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空空
+        mongod --dbpath 
       4.用超级管理员账户连接数据库
         show users                                                                    显示数据库有哪些用户 (前提是切换到要查看的数据库中);
         db.dropUser('admin')                                                          删除数据库用户
