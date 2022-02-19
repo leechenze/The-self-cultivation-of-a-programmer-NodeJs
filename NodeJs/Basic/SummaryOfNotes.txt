@@ -202,6 +202,7 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
       2.修改mongodb数据库配置文件(开启权限认证相关代码);
         配置:
           security:
+          
             authorization:enabled
       3.重启数据库
         mongod --dbpath 
@@ -214,7 +215,7 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
                 例如: mongo 192.168.1.200:27017/test -u leechense -p 123456
         
         
-        
+
         
       
         
