@@ -123,8 +123,9 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
     我的放置目录为: /usr/local/mongodb
     
     
-    
-    mongo                                                                          启动mongodb数据库;
+    mongod -f /usr/local/mongodb/etc/mongodb.conf                                     启动MongoDB服务;
+    db.shutdownServer({force:true})                                                   关闭MongoDB服务;
+    mongo                                                                             启动MongoDB数据库;
 
     一.基础增删改查
       show dbs                                                                       查看所有数据库;
@@ -203,7 +204,6 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
       2.修改mongodb数据库配置文件(开启权限认证相关代码);
         配置:
           security:
-          
             authorization:enabled
       3.重启数据库
         mongod --dbpath 
