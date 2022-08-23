@@ -121,8 +121,11 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
 
     下载地址: https://www.mongodb.com/try/download/community
     我的放置目录为: /usr/local/mongodb
-    
-    
+
+    查看并杀死mongodb进程
+    ps -ef | grep mongodb
+    kill -9 82666
+
     mongod -f /usr/local/mongodb/etc/mongodb.conf                                     启动MongoDB服务;
     db.shutdownServer({force:true})                                                   关闭MongoDB服务;
     mongo                                                                             启动MongoDB数据库;
@@ -131,9 +134,11 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
       show dbs                                                                       查看所有数据库;
       use panda                                                                      创建Panda数据库(同时也是切换操作, 此时show dbs是查不到panda库的, 因为库里没数据);
       show collections                                                               查看数据库中所有的表;
+      show tables                                                                    查看数据库中所有的表;
       db.createCollection('person')                                                  创建person表;
       db.person.insert({'username': 'leechenze'})                                    创建person表(就是在表中存入一条数据);
       db.person.find()                                                               查看person表中的数据;
+      db.person.find({},{id:1, name:1})                                              查看person表中id和name字段的数据
       db.person.find({'age':'20'})                                                   查看person表中age为20的数据
       db.person.find({'age':{$gt:22}})                                               查看person表中age大于22的数据
       db.person.find({'age':{$lt:22}})                                               查看person表中age小于22的数据
@@ -194,31 +199,160 @@ NodeJs可实现的功能: 实现接口,动态网站外,还可应用在云计算�
         "An existing index has the same name as the requested index. When index names are not specified, they are auto generated and can cause conflicts."
 
     三.mongoDB账户权限配置
-      1.创建超级管理账户(首先切换到一个数据库, roles的值'root'表示超级管理员, 只有admin用户可以设置root权限, 其他用户设置root权限会报错,同时,还必须要切换到admin下才可以创建root);
+      1.创建超级管理账户 (首先切换到一个数据库, roles的值'root'表示超级管理员, 只有admin用户可以设置root权限, 其他用户设置root权限会报错,同时,还必须要切换到admin下才可以创建root);
         use admin
         db.createUser({                                                              创建数据库用户
-          user: 'leechenze',
+          user: 'superadmin',
           pwd: '123456',
-          roles: ['root']
+          roles: [{role: 'root', db: 'admin'}]
         })
-      2.修改mongodb数据库配置文件(开启权限认证相关代码);
+
+        数据库用户角色
+            read: 只读数据权限
+            readWrite:读写数据权限
+        数据库管理角色
+            dbAdmin: 在当前db中执行管理操作的权限
+            dbOwner: 在当前db中执行任意操作
+            userADmin: 在当前db中管理user的权限
+        备份和还原角色
+            backup
+            restore
+        夸库角色
+            readAnyDatabase: 在所有数据库上都有读取数据的权限
+            readWriteAnyDatabase: 在所有数据库上都有读写数据的权限
+            userAdminAnyDatabase: 在所有数据库上都有管理user的权限
+            dbAdminAnyDatabase: 管理所有数据库的权限
+        集群管理
+            clusterAdmin: 管理机器的最高权限
+            clusterManager: 管理和监控集群的权限
+            clusterMonitor: 监控集群的权限
+            hostManager: 管理Server
+        超级权限
+            root: 超级用户
+
+      2.修改mongodb数据库配置文件 (/usr/local/mongodb/etc/mongodb.conf) (开启权限认证相关代码);
         配置:
           security:
             authorization:enabled
       3.重启数据库
-        mongod --dbpath 
+        mongod --dbpath
       4.用超级管理员账户连接数据库
-        show users                                                                    显示数据库有哪些用户 (前提是切换到要查看的数据库中);
-        db.dropUser('admin')                                                          删除数据库用户
-        
-        连接本地数据库: mongo panda -u 用户名 -p 密码
-        连接远程数据库: mongo 数据库地址 -u 用户名 -p 密码
-                例如: mongo 192.168.1.200:27017/test -u leechense -p 123456
-        
-        
+        show users                                                                      显示数据库有哪些用户 (前提是切换到要查看的数据库中);
+        db.dropUser('superadmin')                                                       删除数据库用户
+        db.updateUser('superadmin', {pwd: '12345678'})                                  更新密码
+        db.auth('superadmin', '123456')                                                 密码认证
+            一般在 mongo admin 后面没有 -u -p 指定账号密码参数时使用
+            mongo admin
+            db.auth('superadmin', '123456')
+            等同于
+            mongo admin -u superadmin -p 123456
 
-        
-      
-        
-        
-        
+        连接本地数据库: mongo admin -u 用户名 -p 密码
+        连接远程数据库: mongo 数据库地址 -u 用户名 -p 密码
+                例如: mongo 192.168.1.200:27017/admin -u superadmin -p 123456
+      5.给panda数据库创建一个用户 (只能访问panda库 不能访问其他库)                          除了admin库外，其他库同样
+        use panda
+        db.createUser({                                                              创建数据库用户
+          user: 'pandaadmin',
+          pwd: '123456',
+          roles: [{role: 'db', db: 'panda'}]
+        })
+        mongo panda -u pandaadmin -p 123456                                           连接panda数据库
+
+    四.集合和集合的集中关系
+        一对一
+            一个人对应一个唯一的身份证号
+        一对多
+            一个班级对应多名学生
+        多对多
+            一个学生可以选择多门课程，而同一门课程可以被多个同学选修，彼此的对应关系即为多对多
+    五.MongoDB聚合管道（aggregation pipeline）
+        使用聚合管道可以对集合中的文档进行变换和组合
+        管道操作符：
+            $project:   增加，删除，重命名字段
+            $match:     条件匹配，只满足条件的文档才能进入下一阶段
+            $limit:     限制结果的数量
+            $skip:      跳过文档的数量
+            $sort:      条件排序
+            $group:     条件组合结果
+            $lookup:    用以引入其他集合的数据
+
+        $project: 查看person表中 trade_no 和 all_price 字段的数据
+            db.order.aggregate([
+                {
+                    $project: {trade_no:1, all_price:1}
+                }
+            ])
+        $match：用于过滤文档,用法类似于find()方法中的参数, 查询 all_price 大于90的数据
+            db.order.aggregate([
+                {
+                    $project: {trade_no:1, all_price:1}
+                },
+                {
+                    $match: {all_price: {$gte: 90}}
+                }
+            ])
+        $group：以 order_id 进行分组, 统计num字段之和到total字段中 (注意_id是固定写法，前面需要加入下划线)
+            db.order_item.aggregate([
+                {
+                    $group: {_id:'$order_id', total: {$sum: '$num'}}
+                }
+            ])
+        $sort：-1表示降序, 1表示升序。
+            db.order.aggregate([
+                {
+                    $project: {trade_no:1, all_price:1}
+                },
+                {
+                    $sort: {all_price: -1}
+                }
+            ])
+        $limit: 限制查询结果条数
+            db.order.aggregate([
+                {
+                    $project: {trade_no:1, all_price:1}
+                },
+                {
+                    $sort: {all_price: -1}
+                },
+                {
+                    $limit: 1
+                }
+            ])
+        $skip:  跳过前N条数据进行查询 （如下：跳过 12 条之后进行数据查询）
+            db.order.aggregate([
+                {
+                    $project: {trade_no:1, all_price:1}
+                },
+                {
+                    $skip: 12
+                }
+            ])
+        $lookup: 表关联
+            db.order.aggregate([
+                {
+                    $lookup: {
+                        from: "order_item",                 要关联的表
+                        localField: "order_id",             主表（order）中要关联的字段
+                        foreignField: "order_id",           关联表（order_item）中要关联的字段
+                        as: "items"                         把关联的数据放置到的字段名称
+                    }
+                },
+            ])
+    六.数据库备份还原
+        导出备份：
+            mongodump -h localhost:27017 -d panda -u pandaadmin -p 123456 -o /Users/lee/Downloads
+            -h      mongoDB所在服务器地址(原称数据库)
+            -d      数据库
+            -u      用户名
+            -p      密码
+            -o      导出路径
+        恢复备份:
+            mongorestore -h localhost:27017 -d panda -c order --dir /Users/lee/Downloads/dump/order.bson -u pandaadmin -p 123456
+            -c      导入到那张表中(collections)
+            --dir   导入路径
+
+    七.Node连接MongoDB数据库
+        官方文档:
+        https://www.mongodb.com/docs/drivers/node/current/quick-start/
+        https://mongodb.github.io/node-mongodb-native/Next/#update-a-document
